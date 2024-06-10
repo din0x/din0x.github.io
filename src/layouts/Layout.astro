@@ -98,13 +98,15 @@ const { title } = Astro.props;
         }
     </style>
     <script>
-        setTimeout(() => {
+        window.addEventListener("load", () => {
             let html = document.querySelector("html");
     
             if (html != null) {
                 html.style.scrollBehavior = "smooth";
+            } else {
+                console.error("no html element")
             }
-        }, 50)
+        });
     </script>
 </head>
 <body>
