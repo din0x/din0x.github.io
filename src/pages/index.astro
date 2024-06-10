@@ -1,0 +1,129 @@
+---
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout title="Robert Poznański">
+    <style>
+        main, section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        main > h1, section > h1 {
+            font-family: DM Mono, monospace, sans-serif;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        main h1 {
+            max-width: 800px;
+        }
+
+        main h1::after {
+            content: "";
+            display: inline-block;
+            position: relative;
+            margin-inline: 0.15em;
+            width: 0.05em;
+            height: 1.1em;
+            vertical-align: sub;
+            background-color: #c0c0c0;
+        }
+
+        .blink::after {
+            animation: blink 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        section p {
+            text-align: justify;
+        }
+
+        #about {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #about .content {
+            max-width: 600px;
+        }
+    </style>
+    <script>
+        const titles = ["Hello, I'm Robert", "I want to become a software developer"];
+        const initialDelay = 500;
+        const writingDelay = 150;
+        const displayTime = 3000;
+        const emptyTime = 1500;
+        const clearingDelay = 90;
+
+        const greeting = document.querySelector("#greeting");
+        if (greeting == null) {
+            throw "no greeting title";
+        }
+        
+        const sleep = async (timeMs: number) => new Promise((resolve) => setTimeout(resolve, timeMs));
+        const enableBlink = () => greeting.classList.add("blink");
+        const disableBlink = () => greeting.classList.remove("blink");
+
+        const dispayTitle = async (title: string) => {
+            greeting.textContent = "";
+
+            disableBlink();
+
+            for (const ch of title) {
+                greeting.textContent += ch;
+                await sleep(writingDelay);
+            }
+
+            enableBlink();
+        };
+
+        const clearTitle = async () => {
+            if (greeting.textContent == null) {
+                return;
+            }
+
+            disableBlink();
+
+            while (greeting.textContent.length > 0) {
+                console.log(greeting.textContent);
+                greeting.textContent = greeting.textContent.slice(0, -1);
+                await sleep(clearingDelay);
+            }
+
+            enableBlink();
+        };
+
+        await sleep(initialDelay);
+        for (const title of titles) {
+            await dispayTitle(title);
+            await sleep(displayTime);
+            await clearTitle();
+            await sleep(emptyTime);
+        }
+
+        await dispayTitle("Hello, I'm Robert");
+
+    </script>
+    <main>
+        <h1 id="greeting" class="blink"></h1>
+    </main>
+    <section id="about">
+        <h1>about</h1>
+        <div class="content">
+            <p>Hi, I'm Robert, student in secondary school in Krakow. My is goal to become a software dev!</p>
+            <p>I'm interested in systems programming, webdev and also gamedev. Currently learing Rust, but I also programmed in C, Java and C#</p>
+            <p>Contact via email <a href="mailto:robertpoznanski.dev@gmail.com">robertpoznanski.dev@gmail.com</a> or check out my <a href="https://github.com/din0x">github</a> profile.</p>
+        </div>
+    </section>
+</Layout>
