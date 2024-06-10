@@ -97,7 +97,7 @@ const { title } = Astro.props;
             font-size: 0.8em;
         }
     </style>
-    <script defer>
+    <script is:inline>
         setTimeout(() => {
             let html = document.querySelector("html");
             if (html != null) {
