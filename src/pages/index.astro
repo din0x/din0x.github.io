@@ -1,4 +1,5 @@
 ---
+import Project from "../components/Project.astro";
 import Layout from "../layouts/Layout.astro"
 ---
 
@@ -13,9 +14,7 @@ import Layout from "../layouts/Layout.astro"
         }
 
         main > h1, section > h1 {
-            font-family: DM Mono, monospace, sans-serif;
             text-align: center;
-            font-weight: 400;
         }
 
         main h1 {
@@ -56,6 +55,29 @@ import Layout from "../layouts/Layout.astro"
 
         #about .content {
             max-width: 600px;
+        }
+
+        /* #projects .content {
+            max-width: 600px;
+        } */
+
+        #projects {
+            scroll-margin-top: 3.66em;
+        }
+
+        #projects .content {
+            display: grid;
+            gap: 2em;
+            grid-template-columns: 1fr 1fr;
+            width: 1200px;
+        }
+
+        @media (max-width: 1400px) {
+            #projects .content {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+                width: 100%;
+            }
         }
     </style>
     <script>
@@ -124,6 +146,15 @@ import Layout from "../layouts/Layout.astro"
             <p>Hi, I'm Robert, student in secondary school in Krakow. My is goal to become a software dev!</p>
             <p>I'm interested in systems programming, webdev and also gamedev. Currently learing Rust, but I also programmed in C, Java and C#</p>
             <p>Contact via email <a href="mailto:robertpoznanski.dev@gmail.com">robertpoznanski.dev@gmail.com</a> or check out my <a href="https://github.com/din0x">github</a> profile.</p>
+        </div>
+    </section>
+    <section id="projects">
+        <h1>projects</h1>
+        <div class="content">
+            <Project title="scripting-lang" description="Simple scripting language written in rust" img="code-snapshot.png" alt="Simple scripting language example"/>
+            <Project title="zzd" description="xxd clone written in rust" img="images/zzd-preview.png" alt="Simple scripting language example"/>
+            <Project title="zzd" description="xxd clone written in rust" img="images/zzd-preview.png" alt="Simple scripting language example"/>
+            <Project title="scripting-lang" description="Simple scripting language written in rust" img="code-snapshot.png" alt="Simple scripting language example"/>
         </div>
     </section>
 </Layout>
