@@ -1,0 +1,8 @@
+[package]
+name = "din0x-github-io"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+gen-html = "0.3.0"
+rust-website-gen = { git = "https://github.com/din0x/rust-website-gen.git" }
