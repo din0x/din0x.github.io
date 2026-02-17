@@ -164,8 +164,8 @@ impl Route for ServeDir {
     fn build(&self, path: &std::path::Path) -> io::Result<()> {
         walk_dir(&self.0, &mut |entry_path| {
             let dest = path.join(entry_path.strip_prefix(&self.0).unwrap());
-            fs::create_dir_all(dest.parent().unwrap()).expect("failed to create dir");
-            fs::copy(entry_path, dest).expect("failed to copy files");
+            _ = fs::create_dir_all(dest.parent().unwrap());
+            _ = fs::copy(entry_path, dest);
         })
     }
 }
