@@ -143,7 +143,7 @@ impl Render for Tag {
 fn layout(title: &str, content: impl Render) -> String {
     html! {
         (DOCTYPE)
-        html {
+        html ."scheme-only-dark" {
             head {
                 title { (title) }
                 link rel: "stylesheet" href: "/assets/css.css" ;
