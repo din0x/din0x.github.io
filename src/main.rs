@@ -29,7 +29,7 @@ fn root() -> String {
                         br;
                         p ."text-2xl" {
                             strong ."text-2xl" { "Work in progress " }
-                            "hi, I'm Robert, software dev based in Poland. Currently in Zsel 1 highschool in Kraków."
+                            "hi, I'm Robert, software dev based in Poland. Currently a student at ZSEL 1 high school in Kraków."
                         }
                         br;
                         p ."text-2xl" {
@@ -67,39 +67,55 @@ fn root() -> String {
 }
 
 fn projects() -> impl Render {
+    let rust = Tag::new("rust", "#f7a87e");
+    let syn = Tag::new("syn", "#cd516c");
+    let quote = Tag::new("quote", "#9761ca");
+    let wgpu = Tag::new("wgpu", "#0089eb");
+    let winit = Tag::new("winit", "#e0b944");
+    let astro = Tag::new("astro", "#e3399a");
+    let tailwind = Tag::new("tailwind", "#74d4ff");
+    let c = Tag::new("c", "#3996e3");
+    let avr8 = Tag::new("avr8", "#f35446");
+    let fusion = Tag::new("fusion", "#f47c31");
+
+    let calculator = Project::new(
+        "Graphing calculator supporting both 2D and 3D functions \
+                and equations written in Rust, uses a custom renderer built from scratch.",
+    )
+    .image("/assets/projects/graphing.png")
+    .tags([rust, wgpu, winit]);
+
+    let renderer =
+        Project::new("2D/3D renderer built on top of wgpu.")
+            .image("/assets/projects/renderer.png")
+            .tags([rust, wgpu]);
+
+    let gen_html = Project::new(
+        "HTML templating library for Rust. Made \
+                for learning rust's macro system, used in my personal website.",
+    )
+    .tags([rust, syn, quote]);
+
+    let webdev_portfolio = Project::new("Website development").tags([astro, tailwind]);
+
     let projects = [
-        Project {
-            desc: "Graphing calculator supporting both 2d and 3d functions and equations written in Rust.",
-            // tags: vec![Tag::new("webgpu", "#0093ff"), Tag::new("winit", "#f0c751")],
-            tags: vec![
-                Tag::new("rust", "#f7a87e"),
-                Tag::new("webgpu", "#0089eb"),
-                Tag::new("winit", "#e0b944"),
-            ],
-            img: Some("/assets/projects/graphing.png"),
-        },
-        Project {
-            desc: "Another project lerem impsum this is a long description omg",
-            tags: vec![Tag::new("c", "#3996e3"), Tag::new("avr8", "#f35446"), Tag::new("fusion", "#f47c31")],
-            img: None,
-        },
-        Project {
-            desc: "Website development",
-            tags: vec![Tag::new("astro", "#e3399a"), Tag::new("tailwind", "#74d4ff")],
-            img: None,
-        },
+        calculator,
+        gen_html,
+        Project::new("Another project lerem impsum this is a long description omg")
+            .tags([c, avr8, fusion]),
+        renderer,
+        webdev_portfolio,
     ];
 
     html! {
         div ."columns-2 gap-2" {
             for project in &projects {
-                div ."p-2 pb-6 mb-2 rounded-lg bg-gray-900 break-inside-avoid" {
+                div ."p-2 mb-2 rounded-lg border-2 border-gray-800 bg-gray-900 break-inside-avoid" {
                     if let Some(src) = project.img {
                         img ."mb-4" src: (src);
-                        // div ."w-full aspect-square bg-blue-950" {}
                     }
                     p ."mb-6 text-xl font-mono" { (project.desc) }
-                    div ."flex gap-2" {
+                    div ."mb-2 flex gap-2" {
                         for tag in &project.tags {
                             (tag)
                         }
@@ -116,6 +132,27 @@ struct Project {
     tags: Vec<Tag>,
 }
 
+impl Project {
+    fn new(desc: &'static str) -> Self {
+        Self {
+            desc,
+            img: None,
+            tags: Vec::new(),
+        }
+    }
+
+    fn tags(mut self, iter: impl IntoIterator<Item = Tag>) -> Self {
+        self.tags.extend(iter);
+        self
+    }
+
+    fn image(mut self, url: &'static str) -> Self {
+        self.img = Some(url);
+        self
+    }
+}
+
+#[derive(Clone, Copy)]
 struct Tag {
     name: &'static str,
     color: &'static str,
