@@ -5,6 +5,10 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use crate::template::link;
+
+mod template;
+
 fn main() {
     App::new()
         .route("/", root())
@@ -35,15 +39,11 @@ fn root() -> String {
                         p ."text-2xl" {
                             "robertpoznanski.dev@gmail.com"
                             br;
-                            a ."group relative" href: "https://github.com/din0x" {
-                                span ."absolute bottom-0 -z-1 block w-full h-[2px] bg-red-400 duration-50
-                                    group-hover:h-1" {}
-                                "github.com/din0x"
-                            }
+                            (link("github.com/din0x", "https://github.com/din0x"))
                         }
                     }
                 }
-                div ."group" {
+                div ."group/options" {
                     div ."py-6 flex gap-3 font-mono font-700 text-2xl select-none" {
                         for (i, option) in options.iter().enumerate() {
                             if i != 0 {
@@ -58,10 +58,10 @@ fn root() -> String {
                             }
                         }
                     }
-                    div ."hidden group-has-[input[value=projects]:checked]:block" {
+                    div ."hidden group-has-[input[value=projects]:checked]/options:block" {
                         ((projects()))
                     }
-                    div ."hidden group-has-[input[value=education]:checked]:block" {
+                    div ."hidden group-has-[input[value=education]:checked]/options:block" {
                         ((education()))
                     }
                 }
@@ -77,7 +77,9 @@ fn education() -> impl Render {
     html! {
         div ."p-2 mb-2 rounded-lg border-2 border-gray-800 bg-gray-900" {
             p ."mb-6 font-mono text-xl" {
-                "Currently a student at ZSEL 1 high school in Kraków."
+                "Currently a student at "
+                (link("ZSEL 1 high school", "https://zsel1.pl"))
+                " in Kraków."
             }
         }
     }
