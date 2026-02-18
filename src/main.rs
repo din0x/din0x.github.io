@@ -43,27 +43,44 @@ fn root() -> String {
                         }
                     }
                 }
-                div ."py-6 flex gap-3 font-mono font-700 text-2xl select-none" {
-                    for (i, option) in options.iter().enumerate() {
-                        if i != 0 {
-                            span { "/" }
-                        }
-                        label ."cursor-pointer has-[:checked]:text-red-400" {
-                            match i {
-                                0 => input ."hidden" r#type: "radio" name: "selected" value: (option) checked;
-                                _ => input ."hidden" r#type: "radio" name: "selected" value: (option);
+                div ."group" {
+                    div ."py-6 flex gap-3 font-mono font-700 text-2xl select-none" {
+                        for (i, option) in options.iter().enumerate() {
+                            if i != 0 {
+                                span { "/" }
                             }
-                            (option)
+                            label ."cursor-pointer has-[:checked]:text-red-400" {
+                                match i {
+                                    0 => input ."hidden" r#type: "radio" name: "selected" value: (option) checked;
+                                    _ => input ."hidden" r#type: "radio" name: "selected" value: (option);
+                                }
+                                (option)
+                            }
                         }
                     }
+                    div ."hidden group-has-[input[value=projects]:checked]:block" {
+                        ((projects()))
+                    }
+                    div ."hidden group-has-[input[value=education]:checked]:block" {
+                        ((education()))
+                    }
                 }
-                ((projects()))
                 div ."size-64" {}
             }
         }
     };
 
     layout("Robert Poznański", content)
+}
+
+fn education() -> impl Render {
+    html! {
+        div ."p-2 mb-2 rounded-lg border-2 border-gray-800 bg-gray-900" {
+            p ."mb-6 font-mono text-xl" {
+                "Currently a student at ZSEL 1 high school in Kraków."
+            }
+        }
+    }
 }
 
 fn projects() -> impl Render {
@@ -85,10 +102,9 @@ fn projects() -> impl Render {
     .image("/assets/projects/graphing.png")
     .tags([rust, wgpu, winit]);
 
-    let renderer =
-        Project::new("2D/3D renderer built on top of wgpu.")
-            .image("/assets/projects/renderer.png")
-            .tags([rust, wgpu]);
+    let renderer = Project::new("2D/3D renderer built on top of wgpu.")
+        .image("/assets/projects/renderer.png")
+        .tags([rust, wgpu]);
 
     let gen_html = Project::new(
         "HTML templating library for Rust. Made \
