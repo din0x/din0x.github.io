@@ -36,8 +36,8 @@ fn root() -> String {
                             "robertpoznanski.dev@gmail.com"
                             br;
                             a ."group relative" href: "https://github.com/din0x" {
-                                span ."absolute bottom-0 -z-1 block w-full h-1 bg-red-400 duration-100
-                                    group-hover:h-2" {}
+                                span ."absolute bottom-0 -z-1 block w-full h-[2px] bg-red-400 duration-50
+                                    group-hover:h-1" {}
                                 "github.com/din0x"
                             }
                         }
