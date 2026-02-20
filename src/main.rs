@@ -24,7 +24,8 @@ fn root() -> String {
         div ."flex flex-col items-center" {
             div ."mt-6 w-full max-w-240" {
                 div ."flex gap-6" {
-                    img ."size-64" src: "/assets/me.png";
+                    div ."size-64 aspect-square bg-gray-900" {}
+                    // img ."size-64" src: "/assets/me.png";
                     div ."font-mono" {
                         h1 ."mb-8 text-3xl" {
                             span ."text-red-400" { "# " }
