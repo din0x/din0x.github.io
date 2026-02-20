@@ -22,20 +22,19 @@ fn root() -> String {
 
     let content = html! {
         div ."flex flex-col items-center" {
-            div ."w-full max-w-240" {
-                div ."size-6" {}
-                div ."flex" {
-                    div ."size-64 mr-6 aspect-square bg-blue-950" {}
+            div ."mt-6 w-full max-w-240" {
+                div ."flex gap-6" {
+                    img ."size-64" src: "/assets/me.png";
                     div ."font-mono" {
-                        h1 ."text-2xl font-700" {
-                            span ."text-red-400" { ">" } " whoami"
+                        h1 ."mb-8 text-3xl" {
+                            span ."text-red-400" { "# " }
+                            "Hi, I'm Robert"
                         }
-                        br;
-                        p ."text-2xl" {
-                            strong ."text-2xl" { "Work in progress " }
-                            "hi, I'm Robert, software dev based in Poland. Currently a student at ZSEL 1 high school in Kraków."
+                        p ."my-4 text-2xl text-mist-400" {
+                            "I'm a software dev based in "
+                            strong ."text-mist-300 font-normal" { "Kraków, Poland" }
+                            ". Currently a student at ZSEL 1 high school in Kraków."
                         }
-                        br;
                         p ."text-2xl" {
                             "robertpoznanski.dev@gmail.com"
                             br;
@@ -75,7 +74,7 @@ fn root() -> String {
 
 fn education() -> impl Render {
     html! {
-        div ."p-2 mb-2 rounded-lg border-2 border-gray-800 bg-gray-900" {
+        div ."p-2 mb-2 rounded-lg border-2 border-mist-800 bg-mist-900" {
             p ."mb-6 font-mono text-xl" {
                 "Currently a student at "
                 (link("ZSEL 1 high school", "https://zsel1.pl"))
@@ -128,7 +127,7 @@ fn projects() -> impl Render {
     html! {
         div ."columns-2 gap-2" {
             for project in &projects {
-                div ."p-2 mb-2 rounded-lg border-2 border-gray-800 bg-gray-900 break-inside-avoid" {
+                div ."p-2 mb-2 rounded-lg border-2 border-mist-800 bg-mist-900 break-inside-avoid text-mist-400" {
                     if let Some(src) = project.img {
                         img ."mb-4" src: (src);
                     }
@@ -204,7 +203,7 @@ fn layout(title: &str, content: impl Render) -> String {
                 link rel: "stylesheet" href: "/assets/css.css" ;
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
             }
-            body ."bg-gray-950 text-gray-300" {
+            body ."bg-mist-950 text-mist-300" {
                 // (nav())
                 (content)
             }
