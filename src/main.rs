@@ -21,22 +21,22 @@ fn root() -> String {
     let options = ["projects", "education"];
 
     let content = html! {
-        div ."flex flex-col items-center" {
+        div ."px-6 w-full flex flex-col items-center" {
             div ."mt-6 w-full max-w-240" {
                 div ."flex gap-6" {
-                    div ."size-64 aspect-square bg-gray-900" {}
+                    div ."max-md:hidden size-64 aspect-square bg-gray-900" {}
                     // img ."size-64" src: "/assets/me.png";
                     div ."font-mono" {
-                        h1 ."mb-8 text-3xl" {
+                        h1 ."mb-8 text-2xl md:text-3xl" {
                             span ."text-red-400" { "# " }
                             "Hi, I'm Robert"
                         }
-                        p ."my-4 text-2xl text-mist-400" {
+                        p ."my-4 text-xl md:text-2xl text-mist-400" {
                             "I'm a software dev based in "
                             strong ."text-mist-300 font-normal" { "Kraków, Poland" }
                             ". Currently a student at ZSEL 1 high school in Kraków."
                         }
-                        p ."text-2xl" {
+                        p ."text-xl md:text-2xl" {
                             "robertpoznanski.dev@gmail.com"
                             br;
                             (link("github.com/din0x", "https://github.com/din0x"))
@@ -44,7 +44,7 @@ fn root() -> String {
                     }
                 }
                 div ."group/options" {
-                    div ."py-6 flex gap-3 font-mono font-700 text-2xl select-none" {
+                    div ."pt-8 pb-4 md:py-6 flex gap-3 font-mono font-700 text-xl md:text-2xl select-none" {
                         for (i, option) in options.iter().enumerate() {
                             if i != 0 {
                                 span { "/" }
@@ -126,13 +126,13 @@ fn projects() -> impl Render {
     ];
 
     html! {
-        div ."columns-2 gap-2" {
+        div ."md:columns-2 gap-2" {
             for project in &projects {
                 div ."p-2 mb-2 rounded-lg border-2 border-mist-800 bg-mist-900 break-inside-avoid text-mist-400" {
                     if let Some(src) = project.img {
                         img ."mb-4" src: (src);
                     }
-                    p ."mb-6 text-xl font-mono" { (project.desc) }
+                    p ."mb-6 text-lg md:text-xl font-mono" { (project.desc) }
                     div ."mb-2 flex gap-2" {
                         for tag in &project.tags {
                             (tag)
@@ -200,6 +200,9 @@ fn layout(title: &str, content: impl Render) -> String {
         (DOCTYPE)
         html ."scheme-only-dark" {
             head {
+                meta charset: "UTF-8";
+                meta name: "viewport" content: "width=device-width, initial-scale=1.0";
+
                 title { (title) }
                 link rel: "stylesheet" href: "/assets/css.css" ;
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
