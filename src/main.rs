@@ -44,17 +44,41 @@ fn root() -> String {
                     }
                 }
                 div ."group/options" {
-                    div ."pt-8 pb-4 md:py-6 flex gap-3 font-mono font-700 text-xl md:text-2xl select-none" {
+
+                    // div ."pt-8 pb-4 md:py-6 flex gap-8 font-mono font-700 text-xl md:text-2xl select-none" {
+                    //     for (i, option) in options.iter().enumerate() {
+                    //         span
+                    //             ."cursor-pointer"
+                    //             style: (format!("anchor-name: --anchor{i};"))
+                    //             data_indicator_default
+                    //             data_indicator_id: "nav" {
+                    //             (option)
+                    //         }
+                    //     }
+                    // }
+
+                    div ."pt-8 pb-4 md:py-6 flex gap-6 font-mono font-700 text-xl md:text-2xl select-none" {
+                        div
+                            @"nav"
+                            ."absolute -z-1 bg-red-400 cursor-default duration-200"
+                            data_indicator {}
+
                         for (i, option) in options.iter().enumerate() {
-                            if i != 0 {
-                                span { "/" }
-                            }
-                            label ."cursor-pointer has-[:checked]:text-red-400" {
-                                match i {
-                                    0 => input ."hidden" r#type: "radio" name: "selected" value: (option) checked;
-                                    _ => input ."hidden" r#type: "radio" name: "selected" value: (option);
+                            match i {
+                                0 => label
+                                    ."cursor-pointer"
+                                    data_indicator_id: "nav"
+                                {
+                                    input ."hidden" r#type: "radio" name: "selected" value: (option) checked;
+                                    (option)
                                 }
-                                (option)
+                                _ => label
+                                    ."cursor-pointer"
+                                    data_indicator_id: "nav"
+                                {
+                                    input ."hidden" r#type: "radio" name: "selected" value: (option);
+                                    (option)
+                                }
                             }
                         }
                     }
@@ -205,6 +229,7 @@ fn layout(title: &str, content: impl Render) -> String {
 
                 title { (title) }
                 link rel: "stylesheet" href: "/assets/css.css" ;
+                script src: "/assets/script.js" {}
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
             }
             body ."bg-mist-950 text-mist-300" {
