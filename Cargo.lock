@@ -12,18 +12,18 @@ dependencies = [
 
 [[package]]
 name = "gen-html"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "605a5c2dadd6f77f630528cc5904b9a85826c1f4acb7e903c2ae6e8e792fb67f"
+checksum = "ec88b61456753b875507b98d6a2fc655b7ec30b2a05b44088764e613ed4e9786"
 dependencies = [
  "gen-html-proc",
 ]
 
 [[package]]
 name = "gen-html-proc"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "666e47ce454e94e0d0d731946291c60cdbec7009e60ee62cbfe09e0c2acb5ae3"
+checksum = "d2c2270ca10fadb77e3ed9b0239cf9baeac8e98f72094c8f236946fefe28a7b7"
 dependencies = [
  "proc-macro2",
  "quote",

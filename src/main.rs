@@ -64,21 +64,17 @@ fn root() -> String {
                             data_indicator {}
 
                         for (i, option) in options.iter().enumerate() {
-                            match i {
-                                0 => label
-                                    ."cursor-pointer"
-                                    data_indicator_id: "nav"
-                                {
-                                    input ."hidden" r#type: "radio" name: "selected" value: (option) checked;
-                                    (option)
-                                }
-                                _ => label
-                                    ."cursor-pointer"
-                                    data_indicator_id: "nav"
-                                {
-                                    input ."hidden" r#type: "radio" name: "selected" value: (option);
-                                    (option)
-                                }
+                            label
+                                ."cursor-pointer"
+                                data_indicator_id: "nav"
+                            {
+                                input ."hidden"
+                                    r#type: "radio"
+                                    name: "selected"
+                                    value: (option)
+                                    checked: (i == 0);
+
+                                (option)
                             }
                         }
                     }

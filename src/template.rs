@@ -7,15 +7,15 @@ pub fn link(r: impl Render, href: &str) -> impl Render {
         //         group-hover:h-2" {}
         //     (r)
         // }
-            a
-        ."relative inline bg-gradient-to-t from-red-400 to-red-400
-            bg-size-[100%_2px] bg-no-repeat bg-left-bottom
-            duration-50
-            hover:bg-size-[100%_100%]"
-        href: (href)
-        target: "_blank"
-    {
-        (r)
-    }
+        a
+            ."relative inline bg-gradient-to-t from-red-400 to-red-400
+                bg-size-[100%_2px] bg-no-repeat bg-left-bottom
+                duration-50
+                hover:bg-size-[100%_100%]"
+            href: (href)
+            target: "_blank"
+        {
+            (r)
+        }
     }
 }
