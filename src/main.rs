@@ -1,11 +1,10 @@
+use crate::template::link;
 use gen_html::{DOCTYPE, Render, html};
 use rust_website_gen::{App, Route};
 use std::{
     fmt, fs, io,
     path::{Path, PathBuf},
 };
-
-use crate::template::link;
 
 mod template;
 
@@ -44,13 +43,13 @@ fn root() -> String {
                     }
                 }
                 div ."group/options" {
-                    div ."pt-8 pb-4 md:py-6 flex gap-6 font-mono font-700 text-xl md:text-2xl select-none" {
+                    div ."pt-8 pb-4 md:py-6 flex gap-6 font-mono font-700 text-xl md:text-2xl" {
                         for (i, option) in options.iter().enumerate() {
                             label
-                                ."cursor-pointer
-                                decoration-2 decoration-red-400
-                                has-checked:bg-red-400
-                                hover:underline
+                                ."cursor-pointer \
+                                decoration-2 decoration-red-400 \
+                                has-checked:bg-red-400 \
+                                hover:has-not-checked:underline \
                                 duration-100"
                             {
                                 input ."hidden"
@@ -133,7 +132,12 @@ fn projects() -> impl Render {
     html! {
         div ."md:columns-2 gap-2" {
             for project in &projects {
-                div ."p-2 mb-2 rounded-lg border-2 border-mist-800 bg-mist-900 break-inside-avoid text-mist-400" {
+                div
+                    ."p-2 mb-2 \
+                    rounded-lg border-2 border-mist-800 \
+                    bg-mist-900 text-mist-400 \
+                    break-inside-avoid"
+                {
                     if let Some(src) = project.img {
                         img ."mb-4" src: (src);
                     }
@@ -207,13 +211,11 @@ fn layout(title: &str, content: impl Render) -> String {
             head {
                 meta charset: "UTF-8";
                 meta name: "viewport" content: "width=device-width, initial-scale=1.0";
-
                 title { (title) }
                 link rel: "stylesheet" href: "/assets/css.css" ;
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
             }
             body ."bg-mist-950 text-mist-300" {
-                // (nav())
                 (content)
             }
         }
