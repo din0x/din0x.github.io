@@ -79,7 +79,7 @@ fn root() -> String {
 
 fn education() -> impl Render {
     html! {
-        div ."p-2 mb-2 rounded-lg border-2 border-mist-800 bg-mist-900" {
+        div ."p-2 mb-2 rounded-lg border-2 text-mist-400 border-mist-800 bg-mist-900" {
             p ."mb-6 font-mono text-xl" {
                 "Currently a student at "
                 (link("ZSEL 1 high school", "https://zsel1.pl"))
@@ -89,47 +89,71 @@ fn education() -> impl Render {
     }
 }
 
-fn projects() -> impl Render {
-    let rust = Tag::new("rust", "#f7a87e");
-    let syn = Tag::new("syn", "#cd516c");
-    let quote = Tag::new("quote", "#9761ca");
-    let wgpu = Tag::new("wgpu", "#0089eb");
-    let winit = Tag::new("winit", "#e0b944");
-    let astro = Tag::new("astro", "#e3399a");
-    let tailwind = Tag::new("tailwind", "#74d4ff");
-    let c = Tag::new("c", "#3996e3");
-    let avr8 = Tag::new("avr8", "#f35446");
-    let fusion = Tag::new("fusion", "#f47c31");
-
-    let calculator = Project::new(
-        "Graphing calculator supporting both 2D and 3D functions \
-                and equations written in Rust, uses a custom renderer built from scratch.",
-    )
-    .image("/assets/projects/graphing.png")
-    .tags([rust, wgpu, winit]);
-
-    let renderer = Project::new("2D/3D renderer built on top of wgpu.")
-        .image("/assets/projects/renderer.png")
-        .tags([rust, wgpu]);
-
-    let gen_html = Project::new(
-        "HTML templating library for Rust. Made \
-                for learning rust's macro system, used in my personal website.",
-    )
-    .tags([rust, syn, quote]);
-
-    let webdev_portfolio = Project::new("Website development").tags([astro, tailwind]);
-
-    let projects = [
-        calculator,
-        gen_html,
-        Project::new("Another project lerem impsum this is a long description omg")
-            .tags([c, avr8, fusion]),
-        renderer,
-        webdev_portfolio,
-    ];
-
+fn strong(s: &str) -> impl Render {
     html! {
+        strong ."text-mist-300 font-medium" {
+            (s)
+        }
+    }
+}
+
+fn projects() -> impl Render {
+    html! {
+        let rust = Tag::new("rust", "#f7a87e");
+        let syn = Tag::new("syn", "#cd516c");
+        let quote = Tag::new("quote", "#9761ca");
+        let wgpu = Tag::new("wgpu", "#0089eb");
+        let winit = Tag::new("winit", "#e0b944");
+        let astro = Tag::new("astro", "#e3399a");
+        let tailwind = Tag::new("tailwind", "#74d4ff");
+        let c = Tag::new("c", "#3996e3");
+        let avr8 = Tag::new("avr8", "#f35446");
+        let fusion = Tag::new("fusion", "#f47c31");
+
+        let plotrs = Project {
+            image: Some("/assets/projects/graphing.png"),
+            code: Code::Open("https://github.com/din0x/plotrs"),
+            description: &html! {
+                (strong("Graphing calculator "))
+                " supporting both 2D and 3D functions \
+                    and equations written in Rust, uses a custom renderer built from scratch."
+            },
+            tags: vec![rust, wgpu, winit],
+        };
+
+        let renderer = Project {
+            image: Some("/assets/projects/renderer.png"),
+            code: Code::Open("https://github.com/din0x/plotrs"),
+            description: &html! { (strong("2D/3D renderer")) " built on top of wgpu." },
+            tags: vec![rust, wgpu],
+        };
+
+        let gen_html = Project {
+            image: None,
+            code: Code::Open("https://github.com/din0x/gen-html"),
+            description: &html! {
+                (strong("HTML templating library")) " for Rust. Made \
+                for learning rust's macro system, used in my personal website."
+            },
+            tags: vec![rust, syn, quote],
+        };
+
+        let webdev_portfolio = Project {
+            image: None,
+            code: Code::Closed,
+            description: &"Website development",
+            tags: vec![astro, tailwind],
+        };
+
+        let lorem_impsum = Project {
+            image: None,
+            code: Code::Closed,
+            description: &"Another project lorem impsum this is a long description omg",
+            tags: vec![c, avr8, fusion],
+        };
+
+        let projects = [plotrs, gen_html, lorem_impsum, renderer, webdev_portfolio];
+
         div ."md:columns-2 gap-2" {
             for project in &projects {
                 div
@@ -138,14 +162,34 @@ fn projects() -> impl Render {
                     bg-mist-900 text-mist-400 \
                     break-inside-avoid"
                 {
-                    if let Some(src) = project.img {
+                    let Project { image, code, description, tags } = project;
+
+                    if let Some(src) = image {
                         img ."mb-4" src: (src);
                     }
-                    p ."mb-6 text-lg md:text-xl font-mono" { (project.desc) }
+
+                    p ."mb-6 text-lg md:text-xl font-mono" { (description) }
+
                     div ."mb-2 flex gap-2" {
-                        for tag in &project.tags {
+                        for tag in tags {
                             (tag)
                         }
+                    }
+
+                    match code {
+                        Code::Open(repo) => a
+                            ."inline-block mb-0  \
+                            rounded-sm border-2 border-mist-400 \
+                            pb-px px-2 \
+                            text-md font-mono font-medium \
+                            hover:bg-mist-800 hover:-translate-y-px \
+                            duration-100"
+                            href: (repo)
+                            target: "_blank"
+                        {
+                            "View source code"
+                        },
+                        Code::Closed => {}
                     }
                 }
             }
@@ -153,30 +197,16 @@ fn projects() -> impl Render {
     }
 }
 
-struct Project {
-    desc: &'static str,
-    img: Option<&'static str>,
+struct Project<'a> {
+    image: Option<&'a str>,
+    code: Code,
+    description: &'a (dyn Render + 'a),
     tags: Vec<Tag>,
 }
 
-impl Project {
-    fn new(desc: &'static str) -> Self {
-        Self {
-            desc,
-            img: None,
-            tags: Vec::new(),
-        }
-    }
-
-    fn tags(mut self, iter: impl IntoIterator<Item = Tag>) -> Self {
-        self.tags.extend(iter);
-        self
-    }
-
-    fn image(mut self, url: &'static str) -> Self {
-        self.img = Some(url);
-        self
-    }
+enum Code {
+    Open(&'static str),
+    Closed,
 }
 
 #[derive(Clone, Copy)]
