@@ -1,10 +1,10 @@
-use crate::template::link;
 use gen_html::{DOCTYPE, Render, html};
 use rust_website_gen::{App, Route};
 use std::{
     fmt, fs, io,
     path::{Path, PathBuf},
 };
+use template::*;
 
 mod template;
 
@@ -78,15 +78,14 @@ fn root() -> String {
 }
 
 fn education() -> impl Render {
-    html! {
-        div ."p-2 mb-2 rounded-lg border-2 text-mist-400 border-mist-800 bg-mist-900" {
-            p ."mb-6 font-mono text-xl" {
-                "Currently a student at "
-                (link("ZSEL 1 high school", "https://zsel1.pl"))
-                " in Kraków."
-            }
+    frame(html! {
+        
+        p ."mb-6 font-mono text-xl" {
+            "Currently a student at "
+            (link("ZSEL 1 high school", "https://zsel1.pl"))
+            " in Kraków."
         }
-    }
+    })
 }
 
 fn strong(s: &str) -> impl Render {
@@ -108,7 +107,7 @@ fn projects() -> impl Render {
         let tailwind = Tag::new("tailwind", "#74d4ff");
         let c = Tag::new("c", "#3996e3");
         let avr8 = Tag::new("avr8", "#f35446");
-        let fusion = Tag::new("fusion", "#f47c31");
+        let ubx = Tag::new("ubx", "#ff4b4b");
 
         let plotrs = Project {
             image: Some("/assets/projects/graphing.png"),
@@ -138,44 +137,52 @@ fn projects() -> impl Render {
             tags: vec![rust, syn, quote],
         };
 
-        let webdev_portfolio = Project {
+        // let webdev_portfolio = Project {
+        //     image: None,
+        //     code: Code::Closed,
+        //     description: &"Website development",
+        //     tags: vec![astro, tailwind],
+        // };
+
+        let ubx = Project {
             image: None,
-            code: Code::Closed,
-            description: &"Website development",
-            tags: vec![astro, tailwind],
+            code: Code::Open("https://github.com/din0x/ubx"),
+            description: &html! {
+                (strong("UBX protocol library")) " for Rust providing packet encoding and stream \
+                decoding with automatic recovery and synchronization."
+            },
+            tags: vec![rust, ubx],
         };
 
-        let lorem_impsum = Project {
+        let avr = Project {
             image: None,
-            code: Code::Closed,
-            description: &"Another project lorem impsum this is a long description omg",
-            tags: vec![c, avr8, fusion],
+            code: Code::Open("https://github.com/din0x/avr"),
+            description: &html! {
+                (strong("AVR HAL")) " library. Provides safe abstractions for accessing peripherals of ATmega MCUs."
+            },
+            tags: vec![rust, avr8, c],
         };
 
-        let projects = [plotrs, gen_html, lorem_impsum, renderer, webdev_portfolio];
+        let projects = [plotrs, gen_html, ubx, avr, renderer];
 
         div ."md:columns-2 gap-2" {
             for project in &projects {
-                div
-                    ."p-2 mb-2 \
-                    rounded-lg border-2 border-mist-800 \
-                    bg-mist-900 text-mist-400 \
-                    break-inside-avoid"
-                {
-                    let Project { image, code, description, tags } = project;
+                (frame(html! {
 
+                    let Project { image, code, description, tags } = project;
+    
                     if let Some(src) = image {
                         img ."mb-4" src: (src);
                     }
-
+    
                     p ."mb-6 text-lg md:text-xl font-mono" { (description) }
-
+    
                     div ."mb-2 flex gap-2" {
                         for tag in tags {
                             (tag)
                         }
                     }
-
+    
                     match code {
                         Code::Open(repo) => a
                             ."inline-block mb-0  \
@@ -191,7 +198,7 @@ fn projects() -> impl Render {
                         },
                         Code::Closed => {}
                     }
-                }
+                }))
             }
         }
     }

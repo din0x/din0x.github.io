@@ -15,3 +15,11 @@ pub fn link(r: impl Render, href: &str) -> impl Render {
         }
     }
 }
+
+pub fn frame(r: impl Render) -> impl Render {
+    html! {
+        div ."p-2 mb-2 rounded-lg border-2 text-mist-400 border-mist-800 bg-mist-900 break-inside-avoid" {
+            (r)
+        }
+    }
+}
