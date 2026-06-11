@@ -1,4 +1,4 @@
-use gen_html::{DOCTYPE, Render, html};
+use gen_html::{Render, html};
 use rust_website_gen::{App, Route};
 use std::{
     fs, io,
@@ -7,90 +7,87 @@ use std::{
 
 use crate::template::*;
 
+mod blog;
+mod markdown;
 mod template;
 
 fn main() {
     App::new()
         .route("/", root())
+        .route("/experience", experience())
+        .route("/blog", blog::app())
         .route("/assets", ServeDir("assets".into()))
         .build("target/html")
         .unwrap()
 }
 
+fn about_me() -> impl Render {
+    html! {
+        div ."font-mono text-xl md:text-2xl text-mist-400" {
+            p ."mb-4" {
+                "Hi there, I'm " (strong("Robert")) ", highschool student in "
+                (strong("Kraków, Poland")) ". "
+            }
+            p ."mb-4" {
+                "Currently working on a stratospheric balloon."
+            }
+            p ."mb-8" {
+                "I love " (strong("math")) ", coding and working out."
+            }
+            p ."mb" {
+                "Interested? Reach out"
+            }
+            p ."mb-4" {
+                "via email "
+                (strong("robertpoznanski.dev@gmail.com"))
+                br;
+                " or on " (link("github.com/din0x", "https://github.com/din0x"))
+            }
+        }
+    }
+}
+
 fn root() -> String {
-    let options = ["projects", "experience"];
+    let content = html! {
+        div ."px-6 w-full flex flex-col items-center" {
+            div ."w-full max-w-240" {
+                div ."my-10" {
+                    (about_me())
+                }
+                (projects())
+            }
+            div ."size-64" {}
+        }
+    };
+
+    layout("Robert Poznański", "/", content)
+}
+
+fn experience() -> String {
+    let arcan = frame(html! {
+        p ."mb-6 font-mono text-xl" {
+            "Internship at " (strong("Arcan Studios")) " in " (strong("Granada, Spain"))
+            ". Learned 3D modeling, rigging and animating characters in " (strong("Blender")) ". "
+            "Imported custom models and animations to an " (strong("Unreal Engine")) " game. "
+            "Programmed character movement, level obstacles and game logic and using Blueprint"
+            "visual scripting."
+        }
+        div ."flex gap-2" {
+            (UNREAL_ENGINE)
+            (BLENDER)
+        }
+    });
 
     let content = html! {
         div ."px-6 w-full flex flex-col items-center" {
             div ."mt-6 w-full max-w-240" {
-                div ."font-mono text-xl md:text-2xl text-mist-400" {
-                    p ."mb-4" {
-                        "Hi there, I'm " (strong("Robert")) ", highschool student in "
-                        (strong("Kraków, Poland")) ". "
-                    }
-                    p ."mb-4" {
-                        "Currently working on a stratospheric balloon."
-                    }
-                    p ."mb-8" {
-                        "I love " (strong("math")) ", coding and working out."
-                    }
-                    p ."mb" {
-                        "Interested? Reach out"
-                    }
-                    p ."mb-4" {
-                        "via email "
-                        (strong("robertpoznanski.dev@gmail.com"))
-                        br;
-                        " or on " (link("github.com/din0x", "https://github.com/din0x"))
-                    }
-                }
-                div ."group/options" {
-                    nav ."pt-8 pb-4 md:py-6 flex gap-6 font-mono font-700 text-xl md:text-2xl" {
-                        for (i, option) in options.iter().enumerate() {
-                            label
-                                ."cursor-pointer \
-                                decoration-2 decoration-red-400 \
-                                has-checked:bg-red-400 \
-                                hover:has-not-checked:underline \
-                                duration-100"
-                            {
-                                input ."hidden"
-                                    r#type: "radio"
-                                    name: "nav"
-                                    value: (option)
-                                    checked: (i == 0);
-
-                                (option)
-                            }
-                        }
-                    }
-                    div ."hidden group-has-[input[value=projects]:checked]/options:block" {
-                        ((projects()))
-                    }
-                    div ."hidden group-has-[input[value=experience]:checked]/options:block" {
-                        ((experience()))
-                    }
-                }
-                div ."size-64" {}
+                (arcan)
             }
+            div ."size-64" {}
         }
     };
 
-    layout("Robert Poznański", content)
-}
-
-fn experience() -> impl Render {
-    frame(html! {
-        p ."mb-6 font-mono text-xl" {
-            "Internship at " (strong("Arcan Studios")) " in " (strong("Granada, Spain"))
-            ". Creative internship focused on real-time 3D production and game development workflows in a professional studio environment."
-        }
-        div ."mb-2 flex gap-2" {
-            (UNREAL_ENGINE)
-            (BLENDER)
-        }
-        (Badge("1 month", "var(--color-mist-400)"))
-    })
+    layout("Robert Poznański", "/experience", content)
 }
 
 fn strong(r: impl Render) -> impl Render {
@@ -183,7 +180,7 @@ fn projects() -> impl Render {
                         {
                             "View source code"
                         },
-                        Code::Closed => {}
+                        Code::_Closed => {}
                     }
                 }))
             }
@@ -200,26 +197,7 @@ struct Project<'a> {
 
 enum Code {
     Open(&'static str),
-    Closed,
-}
-
-fn layout(title: &str, content: impl Render) -> String {
-    html! {
-        (DOCTYPE)
-        html ."scheme-only-dark" {
-            head {
-                meta charset: "UTF-8";
-                meta name: "viewport" content: "width=device-width, initial-scale=1.0";
-                title { (title) }
-                link rel: "stylesheet" href: "/assets/css.css" ;
-                script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
-            }
-            body ."bg-mist-950 text-mist-300" {
-                (content)
-            }
-        }
-    }
-    .to_string()
+    _Closed,
 }
 
 struct ServeDir(PathBuf);
