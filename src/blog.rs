@@ -1,11 +1,10 @@
-use gen_html::html;
-use rust_website_gen::App;
-use std::{fs, io};
-
 use crate::{
     markdown,
     template::{self, frame},
 };
+use gen_html::html;
+use rust_website_gen::App;
+use std::{fs, io};
 
 pub fn app() -> App {
     let posts = read_all_posts().unwrap();
@@ -23,7 +22,7 @@ pub fn app() -> App {
 fn post(post: &Post) -> String {
     let html = html! {
         div ."px-6 w-full flex flex-col items-center" {
-            div ."my-10 w-full max-w-240 font-mono text-mist-400 text-lg md:text-xl" {
+            div ."mb-10 w-full max-w-180 text-mist-400 text-lg md:text-xl" {
                 (markdown::render(&post.markdown))
             }
             div ."size-64" {}
@@ -36,7 +35,7 @@ fn post(post: &Post) -> String {
 fn root(posts: &[Post]) -> String {
     let html = html! {
         div ."px-6 w-full flex flex-col items-center" {
-            div ."my-10 w-full max-w-240 font-mono text-mist-400 text-lg md:text-xl" {
+            div ."my-10 w-full max-w-180 font-mono text-mist-400 text-lg md:text-xl" {
                 for post in posts {
                     (frame(html! {
                         a href: (post.route) {

@@ -7,6 +7,7 @@ pub fn render(markdown: &str) -> Raw<String> {
     options.insert(Options::ENABLE_STRIKETHROUGH);
     let parser = Parser::new_ext(markdown, options);
 
+    let mut quote_level = 0u32;
     let mut s = String::new();
 
     for ev in parser {
@@ -14,7 +15,15 @@ pub fn render(markdown: &str) -> Raw<String> {
             Event::Start(Tag::Strong) => {
                 s.push_str(r#"<strong class="text-mist-300 font-medium">"#)
             }
-            Event::Start(Tag::Paragraph) => s.push_str(r#"<p class="mb-8">"#),
+            Event::Start(Tag::Paragraph) => {
+                let border = if quote_level == 0 {
+                    "border-l-4 border-red-400 border-dotted pl-2"
+                } else {
+                    ""
+                };
+
+                _ = write!(s, r#"<p class="mb-4 {border} font-serif">"#);
+            }
             Event::Start(Tag::Heading {
                 level,
                 id,
@@ -25,7 +34,7 @@ pub fn render(markdown: &str) -> Raw<String> {
 
                 _ = write!(
                     s,
-                    r#"<{level} class="mb-4 {size} text-mist-200 font-medium""#
+                    r#"<{level} class="mb-4 mt-10 border-l-4 border-red-400 pl-2 {size} text-mist-200 font-semibold font-serif""#
                 );
 
                 if let Some(id) = id {
@@ -40,19 +49,6 @@ pub fn render(markdown: &str) -> Raw<String> {
                     }
                 }
                 _ = write!(s, ">");
-
-                s.push_str(
-                    &html! {
-                        span ."text-red-400" {
-                            for _ in 0..level as u8 {
-                                "#"
-                            }
-                        }
-                        " "
-                    }
-                    .render()
-                    .0,
-                );
             }
             Event::Start(Tag::Link {
                 link_type: _,
@@ -62,22 +58,25 @@ pub fn render(markdown: &str) -> Raw<String> {
             }) => {
                 _ = write!(
                     s,
-                    r#"<a class="text-red-400 decoration-2 decoration-red-400 hover:underline" href="{dest_url}">"#
+                    r#"<a class="2 text-mist-300 decoration-2 decoration-red-400 underline hover:text-mist-200 duration-200" href="{dest_url}">"#
                 );
             }
             Event::Start(Tag::BlockQuote(_)) => {
                 _ = write!(
                     s,
-                    r#"<blockquote class="pl-2 border-mist-500 border-l-3 text-mist-500">"#
+                    r#"<blockquote class="pl-2 border-mist-500 border-l-4 border-dotted text-mist-500 italic">"#
                 );
+                quote_level += 1;
+            }
+            Event::End(TagEnd::BlockQuote(_)) => {
+                _ = write!(s, r#"</blockquote>"#);
+                quote_level -= 1;
             }
             Event::Code(code) => {
                 s.push_str(
                     &html! {
                         code ."text-blue-400" {
-                            "`"
                             (code.to_string())
-                            "`"
                         }
                     }
                     .render()
@@ -85,7 +84,10 @@ pub fn render(markdown: &str) -> Raw<String> {
                 );
             }
             Event::Start(Tag::CodeBlock(_)) => {
-                _ = write!(s, "<pre class=\"mb-8\"><code class=\"text-blue-400\">");
+                _ = write!(
+                    s,
+                    r#"<pre class="mb-4"><code class="text-blue-400 border-l-4 border-blue-400 border-dotted pl-2">"#
+                );
             }
             Event::End(TagEnd::CodeBlock) => {
                 _ = write!(s, "</code></pre>");
@@ -99,12 +101,12 @@ pub fn render(markdown: &str) -> Raw<String> {
 
 fn text_size(h: HeadingLevel) -> &'static str {
     match h {
-        HeadingLevel::H1 => "text-[2em]",
-        HeadingLevel::H2 => "text-[1.75em]",
-        HeadingLevel::H3 => "text-[1.5em]",
-        HeadingLevel::H4 => "text-[1.25em]",
-        HeadingLevel::H5 => "text-[1.125em]",
-        HeadingLevel::H6 => "text-[1em]",
+        HeadingLevel::H1 => "text-[1.30em]",
+        HeadingLevel::H2 => "text-[1.25em]",
+        HeadingLevel::H3 => "text-[1.20em]",
+        HeadingLevel::H4 => "text-[1.15em]",
+        HeadingLevel::H5 => "text-[1.10em]",
+        HeadingLevel::H6 => "text-[1.05em]",
     }
 }
 

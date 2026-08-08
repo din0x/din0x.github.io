@@ -1,6 +1,13 @@
+use gen_html::{DOCTYPE, Render, html};
 use std::fmt;
 
-use gen_html::{DOCTYPE, Render, html};
+pub fn strong(r: impl Render) -> impl Render {
+    html! {
+        strong ."text-mist-300 font-medium" {
+            (r)
+        }
+    }
+}
 
 pub fn link(r: impl Render, href: &str) -> impl Render {
     html! {
@@ -20,7 +27,7 @@ pub fn link(r: impl Render, href: &str) -> impl Render {
 
 pub fn frame(r: impl Render) -> impl Render {
     html! {
-        div ."p-2 mb-2 rounded-lg border-2 border-mist-800 text-mist-400 bg-mist-900 break-inside-avoid" {
+        div ."p-2 rounded-lg border-1 border-mist-800 text-mist-400 bg-mist-900 break-inside-avoid" {
             (r)
         }
     }
@@ -79,12 +86,19 @@ badges! {
     WGPU => "#0089eb",
     WINIT => "#e0b944",
     ASTRO => "#e3399a",
-    TAILWIND => "#74d4ff",
+    TAILWIND => "#14c1ca",
     C => "#3996e3",
     AVR8 => "#f35446",
     UBX => "#ff4b4b",
     BLENDER => "#ffa754",
-    UNREAL_ENGINE => "#888bed"
+    UNREAL_ENGINE => "#888bed",
+    AXUM => "#f94fbe",
+    PYTHON => "#51a5e6",
+    COOLIFY => "#9658ff",
+    DOCKER => "#2291e5",
+    REACT => "#5e8aea",
+    VITE => "#ffbe16",
+    JWT => "#dd2f6f",
 }
 
 #[derive(Clone, Copy)]
@@ -104,9 +118,9 @@ impl Target {
 
 pub fn layout(title: &str, path: &str, content: impl Render) -> String {
     let pages = [
-        ("projects", "/", Target::Here),
-        ("blog", "/blog", Target::Here),
-        ("experience", "/experience", Target::Here),
+        ("home", "/", Target::Here),
+        // ("blog", "/blog", Target::Here),
+        ("resume", "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf", Target::Blank),
         ("github", "https://github.com/din0x", Target::Blank),
     ];
 
@@ -117,13 +131,13 @@ pub fn layout(title: &str, path: &str, content: impl Render) -> String {
                 meta charset: "UTF-8";
                 meta name: "viewport" content: "width=device-width, initial-scale=1.0";
                 title { (title) }
-                link rel: "stylesheet" href: "/assets/css.css" ;
+                link rel: "stylesheet" href: "/assets/css.css";
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
             }
             body ."bg-mist-950 text-mist-300" {
-                div ."px-6 w-full flex flex-col items-center bg-gray-900 border-b-2 border-gray-800" {
-                    div ."py-4 w-full max-w-240" {
-                        nav ."px-2 flex gap-8 text-mist-300 font-mono text-xl justify-end" {
+                div ."px-6 w-full flex flex-col items-center bg-gray-900 border-b-1 border-gray-800" {
+                    div ."py-4 w-full max-w-180" {
+                        nav ."px-2 flex gap-8 text-mist-300 text-xl justify-end" {
                             for (name, href, target) in pages {
                                 (nav_link(name, href, target, href == path))
                             }
@@ -157,10 +171,11 @@ fn nav_link(name: &str, href: &str, target: Target, is_active: bool) -> impl Ren
 
 fn footer() -> impl Render {
     html! {
-        div ."px-6 w-full flex flex-col items-center bg-gray-900 border-t-2 border-gray-800" {
-            div ."py-4 w-full max-w-240 py-1 px-2 text-mist-300 font-mono text-xl" {
+        div ."px-6 w-full flex flex-col items-center bg-gray-900 border-t-1 border-gray-800" {
+            div ."py-4 w-full max-w-240 py-1 px-2 text-mist-300 text-xl" {
                 p ."text-center text-blue-400 font-medium decoration-2 decoration-blue-400 cursor-pointer hover:underline"  onclick: "window.scrollTo({ top: 0, behavior: 'smooth' });" {
-                    "Back to the top ↑"
+                    "Back to the top "
+                    span ."font-mono" { "↑" }
                 }
             }
         }
