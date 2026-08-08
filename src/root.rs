@@ -107,7 +107,7 @@ impl Render for Experience {
                     }
                 }
 
-                div ."mt-4 flex gap-2" {
+                div ."mt-4 flex gap-1" {
                     for badge in badges {
                         (badge)
                     }
@@ -125,6 +125,7 @@ fn projects() -> impl Render {
         let plotrs = Project {
             image: Some("/assets/projects/graphing.png"),
             code: Code::Open("https://github.com/din0x/plotrs"),
+            crates_io: None,
             description: &html! {
                 (strong("Graphing calculator "))
                 " supporting both 2D and 3D functions \
@@ -136,6 +137,7 @@ fn projects() -> impl Render {
         let renderer = Project {
             image: Some("/assets/projects/renderer.png"),
             code: Code::Open("https://github.com/din0x/plotrs"),
+            crates_io: None,
             description: &html! { (strong("2D/3D renderer")) " built on top of wgpu." },
             tags: vec![RUST, WGPU],
         };
@@ -143,6 +145,7 @@ fn projects() -> impl Render {
         let gen_html = Project {
             image: None,
             code: Code::Open("https://github.com/din0x/gen-html"),
+            crates_io: Some("https://crates.io/crates/gen-html"),
             description: &html! {
                 (strong("HTML templating library")) " for Rust. Made \
                 for learning rust's macro system, used in my personal website."
@@ -153,6 +156,7 @@ fn projects() -> impl Render {
         let ubx = Project {
             image: None,
             code: Code::Open("https://github.com/din0x/ubx"),
+            crates_io: None,
             description: &html! {
                 (strong("UBX protocol library")) " for Rust providing packet encoding and stream \
                 decoding with automatic recovery and synchronization."
@@ -163,6 +167,7 @@ fn projects() -> impl Render {
         let avr = Project {
             image: None,
             code: Code::Open("https://github.com/din0x/avr"),
+            crates_io: None,
             description: &html! {
                 (strong("AVR HAL")) " library. Provides safe abstractions for accessing peripherals of ATmega MCUs."
             },
@@ -182,6 +187,7 @@ fn projects() -> impl Render {
 struct Project<'a> {
     image: Option<&'a str>,
     code: Code,
+    crates_io: Option<&'static str>,
     description: &'a (dyn Render + 'a),
     tags: Vec<Badge>,
 }
@@ -189,7 +195,7 @@ struct Project<'a> {
 impl Render for Project<'_> {
     fn render_to(&self, f: &mut fmt::Formatter) -> fmt::Result {
         html! {
-            let Project { image, code, description, tags } = self;
+            let Project { image, code, crates_io, description, tags } = self;
 
             div ."mb-4 border-l-4 border-red-400 border-dotted pl-2 flex flex-row gap-2 justify-between" {
                 div ."flex flex-col gap-2 justify-between" {
@@ -198,23 +204,18 @@ impl Render for Project<'_> {
                     }
 
                     div {
-                        match code {
-                            Code::Open(repo) => a
-                                ."inline-block mb-2 \
-                                rounded-sm border-2 border-slate-500 \
-                                pb-px px-2 \
-                                text-md text-slate-400 font-mono font-medium \
-                                hover:bg-mist-800 hover:-translate-y-px \
-                                duration-100"
-                                href: (repo)
-                                target: "_blank"
-                            {
-                                "Github"
-                            },
-                            Code::_Closed => {}
+                        div ."flex gap-1" {
+                            match code {
+                                Code::Open(repo) => (project_external_link_badge("Github", repo)),
+                                Code::_Closed => {}
+                            }
+
+                            if let Some(crates_io) = crates_io {
+                                (project_external_link_badge("crates.io", crates_io))
+                            }
                         }
 
-                        div ."flex gap-2" {
+                        div ."flex gap-1" {
                             for tag in tags {
                                 (tag)
                             }
@@ -222,15 +223,28 @@ impl Render for Project<'_> {
                     }
                 }
 
-                // div ."" {
-
-                // }
-
                 if let Some(src) = image {
                     img ."w-65 h-fit aspect-16/9 object-cover rounded-md" src: (src);
                 }
             }
         }.render_to(f)
+    }
+}
+
+fn project_external_link_badge(label: &str, href: &str) -> impl Render {
+    html! {
+        a
+            ."inline-block mb-2 \
+            rounded-sm border-2 border-slate-500 \
+            pb-px px-2 \
+            text-md text-slate-400 font-mono font-medium \
+            hover:bg-mist-800 hover:-translate-y-px \
+            duration-100"
+            href: (href)
+            target: "_blank"
+        {
+            (label)
+        }
     }
 }
 

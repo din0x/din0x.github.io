@@ -120,7 +120,11 @@ pub fn layout(title: &str, path: &str, content: impl Render) -> String {
     let pages = [
         ("home", "/", Target::Here),
         // ("blog", "/blog", Target::Here),
-        ("resume", "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf", Target::Blank),
+        (
+            "resume",
+            "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf",
+            Target::Blank,
+        ),
         ("github", "https://github.com/din0x", Target::Blank),
     ];
 
