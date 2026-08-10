@@ -8,7 +8,7 @@ pub fn root() -> String {
         role: "Game Developer Intern",
         timespan: "May 2026",
         location: "Granada, Spain",
-        badges: vec![UNREAL_ENGINE, BLENDER],
+        badges: Badges(vec![UNREAL_ENGINE, BLENDER]),
     };
 
     let cavatina = Experience {
@@ -16,7 +16,7 @@ pub fn root() -> String {
         role: "Software Developer Intern",
         timespan: "Jul 2026",
         location: "Kraków, Poland",
-        badges: vec![RUST, AXUM, JWT, REACT, TAILWIND, DOCKER, COOLIFY, PYTHON],
+        badges: Badges(vec![RUST, AXUM, JWT, REACT, TAILWIND, DOCKER, COOLIFY, PYTHON]),
     };
 
     let jobs = [cavatina, arcan];
@@ -33,17 +33,23 @@ pub fn root() -> String {
                         p ."mb-4" {
                             "Currently working on a stratospheric balloon."
                         }
-                        p ."mb-8" {
+                        p ."mb-10" {
                             "I love " (strong("math")) ", coding and working out."
                         }
-                        p ."mb" {
-                            "Interested? Reach out"
-                        }
-                        p ."mb-4" {
-                            "via email "
-                            (strong("robertpoznanski.dev@gmail.com"))
-                            br;
-                            " or on " (link("github.com/din0x", "https://github.com/din0x"))
+                        // p ."mb" {
+                        //     "Interested? Reach out"
+                        // }
+                        // p ."mb-4" {
+                        //     "via email "
+                        //     (strong("robertpoznanski.dev@gmail.com"))
+                        //     br;
+                        //     " or on " (link("github.com/din0x", "https://github.com/din0x"))
+                        // }
+
+                        div ."flex gap-2" {
+                            (button("fa-solid fa-inbox", "Email", "mailto:robertpoznanski.dev@gmail.com"))
+                            (button("fa-solid fa-file", "Resume", "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf"))
+                            (button("fa-brands fa-github", "Github", "https://github.com/din0x"))
                         }
                     }
                 }
@@ -73,12 +79,23 @@ pub fn root() -> String {
     layout("Robert Poznański", "/", content)
 }
 
+fn button(icon: &str, name: &str, href: &str) -> impl Render {
+    html! {
+        a ."border-2 border-slate-500 rounded-lg px-2 inline-flex items-center font-mono font-medium text-slate-400 cursor-pointer hover:bg-mist-800 hover:-translate-y-1 duration-100" href: (href) {
+            span ."text-lg mr-1" {
+                i .(icon) {}
+            }
+            (name)
+        }
+    }
+}
+
 struct Experience {
     company: &'static str,
     role: &'static str,
     location: &'static str,
     timespan: &'static str,
-    badges: Vec<Badge>,
+    badges: Badges,
 }
 
 impl Render for Experience {
@@ -108,9 +125,7 @@ impl Render for Experience {
                 }
 
                 div ."mt-4 flex gap-1" {
-                    for badge in badges {
-                        (badge)
-                    }
+                    (badges)
                 }
             }
         }
@@ -131,7 +146,7 @@ fn projects() -> impl Render {
                 " supporting both 2D and 3D functions \
                     and equations written in Rust, uses a custom renderer built from scratch."
             },
-            tags: vec![RUST, WGPU, WINIT],
+            badges: Badges(vec![RUST, WGPU, WINIT]),
         };
 
         let renderer = Project {
@@ -139,7 +154,7 @@ fn projects() -> impl Render {
             code: Code::Open("https://github.com/din0x/plotrs"),
             crates_io: None,
             description: &html! { (strong("2D/3D renderer")) " built on top of wgpu." },
-            tags: vec![RUST, WGPU],
+            badges: Badges(vec![RUST, WGPU]),
         };
 
         let gen_html = Project {
@@ -150,7 +165,7 @@ fn projects() -> impl Render {
                 (strong("HTML templating library")) " for Rust. Made \
                 for learning rust's macro system, used in my personal website."
             },
-            tags: vec![RUST, SYN, QUOTE],
+            badges: Badges(vec![RUST, SYN, QUOTE]),
         };
 
         let ubx = Project {
@@ -161,7 +176,7 @@ fn projects() -> impl Render {
                 (strong("UBX protocol library")) " for Rust providing packet encoding and stream \
                 decoding with automatic recovery and synchronization."
             },
-            tags: vec![RUST, UBX],
+            badges: Badges(vec![RUST, UBX]),
         };
 
         let avr = Project {
@@ -171,7 +186,7 @@ fn projects() -> impl Render {
             description: &html! {
                 (strong("AVR HAL")) " library. Provides safe abstractions for accessing peripherals of ATmega MCUs."
             },
-            tags: vec![RUST, AVR8, C],
+            badges: Badges(vec![RUST, AVR8, C]),
         };
 
         let projects = [plotrs, gen_html, ubx, avr, renderer];
@@ -189,13 +204,13 @@ struct Project<'a> {
     code: Code,
     crates_io: Option<&'static str>,
     description: &'a (dyn Render + 'a),
-    tags: Vec<Badge>,
+    badges: Badges,
 }
 
 impl Render for Project<'_> {
     fn render_to(&self, f: &mut fmt::Formatter) -> fmt::Result {
         html! {
-            let Project { image, code, crates_io, description, tags } = self;
+            let Project { image, code, crates_io, description, badges } = self;
 
             div ."mb-4 border-l-4 border-red-400 border-dotted pl-2 flex flex-row gap-2 justify-between" {
                 div ."flex flex-col gap-2 justify-between" {
@@ -216,9 +231,7 @@ impl Render for Project<'_> {
                         }
 
                         div ."flex gap-1" {
-                            for tag in tags {
-                                (tag)
-                            }
+                            (badges)
                         }
                     }
                 }

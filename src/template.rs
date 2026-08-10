@@ -9,21 +9,21 @@ pub fn strong(r: impl Render) -> impl Render {
     }
 }
 
-pub fn link(r: impl Render, href: &str) -> impl Render {
-    html! {
-        a
-            ."relative inline bg-gradient-to-t from-red-400 to-red-400 \
-            bg-size-[100%_2px] bg-no-repeat bg-left-bottom text-mist-300 \
-            hover:bg-size-[100%_100%] \
-            duration-50"
+// pub fn link(r: impl Render, href: &str) -> impl Render {
+//     html! {
+//         a
+//             ."relative inline bg-gradient-to-t from-red-400 to-red-400 \
+//             bg-size-[100%_2px] bg-no-repeat bg-left-bottom text-mist-300 \
+//             hover:bg-size-[100%_100%] \
+//             duration-50"
 
-            href: (href)
-            target: "_blank"
-        {
-            (r)
-        }
-    }
-}
+//             href: (href)
+//             target: "_blank"
+//         {
+//             (r)
+//         }
+//     }
+// }
 
 pub fn frame(r: impl Render) -> impl Render {
     html! {
@@ -101,17 +101,31 @@ badges! {
     JWT => "#dd2f6f",
 }
 
+pub struct Badges(pub Vec<Badge>);
+
+impl Render for Badges {
+    fn render_to(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        html! {
+            div ."flex gap-1" {
+                for badge in &self.0 {
+                    (badge)
+                }
+            }
+        }.render_to(f)
+    }
+}
+
 #[derive(Clone, Copy)]
 enum Target {
     Here,
-    Blank,
+    _Blank,
 }
 
 impl Target {
     fn value(self) -> Option<&'static str> {
         match self {
             Self::Here => None,
-            Self::Blank => Some("_blank"),
+            Self::_Blank => Some("_blank"),
         }
     }
 }
@@ -120,12 +134,12 @@ pub fn layout(title: &str, path: &str, content: impl Render) -> String {
     let pages = [
         ("home", "/", Target::Here),
         // ("blog", "/blog", Target::Here),
-        (
-            "resume",
-            "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf",
-            Target::Blank,
-        ),
-        ("github", "https://github.com/din0x", Target::Blank),
+        // (
+        //     "resume",
+        //     "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf",
+        //     Target::Blank,
+        // ),
+        // ("github", "https://github.com/din0x", Target::Blank),
     ];
 
     html! {
@@ -137,10 +151,11 @@ pub fn layout(title: &str, path: &str, content: impl Render) -> String {
                 title { (title) }
                 link rel: "icon" r#type: "image/svg+xml" href: "/assets/r.svg";
                 link rel: "stylesheet" href: "/assets/css.css";
+                script src: "https://kit.fontawesome.com/b1b1617651.js" crossorigin: "anonymous" {}
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
             }
             body ."bg-mist-950 text-mist-300" {
-                div ."px-6 w-full flex flex-col items-center bg-gray-900 border-b-1 border-gray-800" {
+                div ."px-6 w-full flex flex-col items-center align-center bg-gray-900 border-b-1 border-gray-800" {
                     div ."py-4 w-full max-w-180" {
                         nav ."px-2 flex gap-8 text-mist-300 text-xl justify-end" {
                             for (name, href, target) in pages {
