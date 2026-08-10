@@ -48,7 +48,7 @@ pub fn root() -> String {
                         //     " or on " (link("github.com/din0x", "https://github.com/din0x"))
                         // }
 
-                        div ."flex gap-2" {
+                        div ."flex flex-wrap gap-2" {
                             (button("fa-solid fa-inbox", "Email", "mailto:robertpoznanski.dev@gmail.com"))
                             (button("fa-solid fa-file", "Resume", "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf"))
                             (button("fa-brands fa-github", "Github", "https://github.com/din0x"))
@@ -214,7 +214,7 @@ impl Render for Project<'_> {
         html! {
             let Project { image, code, crates_io, description, badges } = self;
 
-            div ."mb-4 border-l-4 border-red-400 border-dotted pl-2 flex flex-row gap-2 justify-between" {
+            div ."mb-4 border-l-4 border-red-400 border-dotted pl-2 flex flex-col-reverse sm:flex-row gap-2 justify-between" {
                 div ."flex flex-col gap-2 justify-between" {
                     p ."md:text-xl text-xl text-mist-400" {
                         (description)
@@ -239,7 +239,7 @@ impl Render for Project<'_> {
                 }
 
                 if let Some(src) = image {
-                    img ."w-65 h-fit aspect-16/9 object-cover rounded-md" src: (src);
+                    img ."w-full sm:w-65 h-fit aspect-16/9 object-cover rounded-md" src: (src);
                 }
             }
         }.render_to(f)

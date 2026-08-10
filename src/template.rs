@@ -106,7 +106,7 @@ pub struct Badges(pub Vec<Badge>);
 impl Render for Badges {
     fn render_to(&self, f: &mut fmt::Formatter) -> fmt::Result {
         html! {
-            div ."flex gap-1" {
+            div ."flex flex-wrap gap-1" {
                 for badge in &self.0 {
                     (badge)
                 }
