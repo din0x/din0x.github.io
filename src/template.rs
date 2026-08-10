@@ -156,9 +156,9 @@ pub fn layout(title: &str, path: &str, content: impl Render) -> String {
                 script src: "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" {}
             }
             body ."bg-mist-950 text-mist-300" {
-                div ."px-6 w-full flex flex-col items-center align-center bg-gray-900 border-b-1 border-gray-800" {
+                div ."px-4 w-full flex flex-col items-center align-center bg-gray-900 border-b-1 border-gray-800" {
                     div ."py-4 w-full max-w-180" {
-                        nav ."px-2 flex gap-8 text-mist-300 text-xl justify-end" {
+                        nav ."flex gap-8 text-mist-300 text-xl justify-end" {
                             for (name, href, target) in pages {
                                 (nav_link(name, href, target, href == path))
                             }

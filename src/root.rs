@@ -24,7 +24,7 @@ pub fn root() -> String {
     let jobs = [cavatina, arcan];
 
     let content = html! {
-        div ."px-6 w-full flex flex-col items-center font-serif" {
+        div ."px-3 w-full flex flex-col items-center font-serif" {
             div ."w-full max-w-180" {
                 div ."my-10" {
                     div ."text-xl md:text-2xl text-mist-400 tracking-wide" {
