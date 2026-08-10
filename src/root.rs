@@ -48,7 +48,7 @@ pub fn root() -> String {
                         //     " or on " (link("github.com/din0x", "https://github.com/din0x"))
                         // }
 
-                        div ."flex flex-wrap gap-2" {
+                        div ."flex flex-wrap gap-1" {
                             (button("fa-solid fa-inbox", "Email", "mailto:robertpoznanski.dev@gmail.com"))
                             (button("fa-solid fa-file", "Resume", "https://github.com/din0x/resume/raw/refs/heads/main/main.pdf"))
                             (button("fa-brands fa-github", "Github", "https://github.com/din0x"))
@@ -83,8 +83,8 @@ pub fn root() -> String {
 
 fn button(icon: &str, name: &str, href: &str) -> impl Render {
     html! {
-        a ."border-2 border-slate-500 rounded-lg px-2 inline-flex items-center font-mono font-medium text-slate-400 cursor-pointer hover:bg-mist-800 hover:-translate-y-1 duration-100" href: (href) {
-            span ."text-lg mr-1" {
+        a ."border-2 border-slate-500 rounded-lg px-2 inline-flex items-center font-mono font-medium text-base sm:text-xl text-slate-400 cursor-pointer hover:bg-mist-800 hover:-translate-y-1 duration-100" href: (href) {
+            span ."mr-1" {
                 i .(icon) {}
             }
             (name)
