@@ -111,7 +111,8 @@ impl Render for Badges {
                     (badge)
                 }
             }
-        }.render_to(f)
+        }
+        .render_to(f)
     }
 }
 

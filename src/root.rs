@@ -16,7 +16,9 @@ pub fn root() -> String {
         role: "Software Developer Intern",
         timespan: "Jul 2026",
         location: "Kraków, Poland",
-        badges: Badges(vec![RUST, AXUM, JWT, REACT, TAILWIND, DOCKER, COOLIFY, PYTHON]),
+        badges: Badges(vec![
+            RUST, AXUM, JWT, REACT, TAILWIND, DOCKER, COOLIFY, PYTHON,
+        ]),
     };
 
     let jobs = [cavatina, arcan];
